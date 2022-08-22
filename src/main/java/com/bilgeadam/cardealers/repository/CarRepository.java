@@ -7,7 +7,9 @@ package com.bilgeadam.cardealers.repository;
 import com.bilgeadam.cardealers.entity.Car;
 import com.bilgeadam.cardealers.utility.DbConnection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,17 +43,60 @@ public class CarRepository  implements ICrud<Car>{
 
     @Override
     public void update(Car t, long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql= "update car set brand=?,car_model=?, model_year=?,dealership_id=? where id=?";
+            try {
+                PreparedStatement ps =DbConnection.getInstance().getConnection().prepareStatement(sql);
+                ps.setString(1, t.getBrand());
+                ps.setString(2, t.getCarModel());
+                ps.setString(3, t.getModelYear());
+                ps.setLong(4, t.getDealershipId());
+              ps.setLong(5, id);
+              ps.executeUpdate();
+            
+            } catch (SQLException ex) {
+                Logger.getLogger(CarRepository.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     @Override
     public void delete(long id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String sql= "delete from car where id=?";
+            try {
+                PreparedStatement ps=DbConnection.getInstance().getConnection().prepareStatement(sql);
+                ps.setLong(1, id);
+                ps.executeUpdate();
+            } catch (SQLException ex) {
+                Logger.getLogger(CarRepository.class.getName()).log(Level.SEVERE, null, ex);
+            }
     }
 
     @Override
     public List<Car> findAll() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+         List<Car> cars=new ArrayList<>();
+		String sql="Select * from car order by id";
+		PreparedStatement ps;
+                
+            try {
+                ps = DbConnection.getInstance().getConnection().prepareStatement(sql);
+            
+             ResultSet rs=ps.executeQuery();
+   
+                while(rs.next()){
+                    Long id=rs.getLong(1);
+                    String brand=rs.getString("brand");
+                    String carModel=rs.getString("car_model");
+                    String modelYear=rs.getString("model_year");
+                     Long dealershipId=rs.getLong(5);
+                    Car car=new Car(id,brand, carModel, modelYear,dealershipId);
+                    cars.add(car);
+                }
+            } 
+            catch (SQLException ex) {
+                Logger.getLogger(CarRepository.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                  
+                
+                return  cars;
     }
 
     @Override
@@ -77,6 +122,23 @@ public class CarRepository  implements ICrud<Car>{
         
         
         
+        
+    }
+       public boolean  databaseControl(){
+           boolean control=false;
+           String sql="select id from car";
+           PreparedStatement ps;
+           ResultSet rs = null;
+           try {
+               ps = DbConnection.getInstance().getConnection().prepareStatement(sql);
+               rs = ps.executeQuery();
+               control=rs.next();
+           } catch (SQLException ex) {
+               Logger.getLogger(DealershipRepository.class.getName()).log(Level.SEVERE, null, ex);
+           }
+        
+      
+    return  control;
         
     }
     

@@ -5,6 +5,7 @@
 package com.bilgeadam.cardealers.utility;
 
 import com.bilgeadam.cardealers.entity.Car;
+import com.bilgeadam.cardealers.entity.Dealership;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -57,6 +58,24 @@ public class FileUtils {
         
         
         return  car;
+    }
+    
+        public static List<Dealership>  getDealership(List<String> list){
+        List<Dealership> dealerships=new ArrayList<>();
+        for (String string : list) {
+         dealerships.add(convertToDealership(string.split(",")));
+        }
+        return  dealerships;
+    }
+    
+    
+    public static  Dealership convertToDealership(String [] array){
+        
+        
+       return new Dealership(Long.parseLong(array[0]), array[1], array[2], array[3]);
+        
+        
+        
     }
     
     public static void main(String[] args) {

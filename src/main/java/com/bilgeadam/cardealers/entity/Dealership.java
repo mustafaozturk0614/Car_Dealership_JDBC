@@ -62,7 +62,7 @@ public class Dealership {
 
     @Override
     public String toString() {
-        return "Dealership{" + "id=" + id + ", name=" + name + ", country=" + country + ", city=" + city + '}';
+        return  name;
     }
     
     
